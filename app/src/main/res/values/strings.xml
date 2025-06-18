@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Virtual Tour AR</string>
+    <string name="welcome_message">Welcome to IIT Kanpur Virtual Tour</string>
+    <string name="app_description">Explore IIT Kanpur campus through augmented reality. Discover hidden AR easter eggs at famous landmarks!</string>
+    <string name="start_tour">Start AR Tour</string>
+    <string name="permission_required">Camera and Location permissions are required</string>
+    <string name="location_required">Please enable location services</string>
+    <string name="ar_not_supported">AR is not supported on this device</string>
+    <string name="searching_location">Searching for location…</string>
+    <string name="location_found">Location found!</string>
+    <string name="landmark_discovered">Landmark discovered!</string>
+    <string name="loading">Loading...</string>
+    
+    <!-- Landmark Names -->
+    <string name="computer_center">Computer Center</string>
+    <string name="main_auditorium">Main Auditorium</string>
+    <string name="faculty_bridge">Faculty Bridge</string>
+    <string name="sculpture_fountain">Sculpture Fountain</string>
+    <string name="kargil_chauraha">Kargil Chauraha</string>
+    
+    <!-- Landmark Descriptions -->
+    <string name="computer_center_desc">The Computer Center at IIT Kanpur is a hub of technological innovation and research.</string>
+    <string name="main_auditorium_desc">The Main Auditorium hosts various cultural events, conferences, and ceremonies.</string>
+    <string name="faculty_bridge_desc">A beautiful bridge connecting different parts of the campus, offering scenic views.</string>
+    <string name="sculpture_fountain_desc">An artistic fountain featuring unique sculptures, a popular spot for students.</string>
+    <string name="kargil_chauraha_desc">A significant intersection named in honor of the Kargil War heroes.</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="128dp"
+    android:viewportWidth="96"
+    android:viewportHeight="128">
+    
+    <path
+        android:name="egg"
+        android:fillColor="@color/primary_purple"
+        android:pathData="M48,24C48,24 24,48 24,72C24,96 36,104 48,104C60,104 72,96 72,72C72,48 48,24 48,24Z" />
+    
+    <path
+        android:fillColor="@color/lavender_light"
+        android:pathData="M48,32C48,32 32,48 32,68C32,88 40,96 48,96C56,96 64,88 64,68C64,48 48,32 48,32Z" />
+    
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M44,48C44,48 40,52 40,60C40,68 42,72 44,72C46,72 48,68 48,60C48,52 44,48 44,48Z" />
+</vector> 

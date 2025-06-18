@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially"
+    android:repeatMode="reverse"
+    android:repeatCount="infinite">
+    <set android:ordering="together">
+        <objectAnimator
+            android:propertyName="translationY"
+            android:duration="1000"
+            android:valueTo="-20"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/linear" />
+        <objectAnimator
+            android:propertyName="rotation"
+            android:duration="1000"
+            android:valueTo="5"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/linear" />
+    </set>
+    <set android:ordering="together">
+        <objectAnimator
+            android:propertyName="translationY"
+            android:duration="1000"
+            android:valueTo="0"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/linear" />
+        <objectAnimator
+            android:propertyName="rotation"
+            android:duration="1000"
+            android:valueTo="0"
+            android:valueType="floatType"
+            android:interpolator="@android:interpolator/linear" />
+    </set>
+</set> 

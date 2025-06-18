@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.VirtualTourAR" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/lavender</item>
+        <item name="colorPrimaryVariant">@color/lavender_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/lavender_light</item>
+        <item name="colorSecondaryVariant">@color/lavender</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Background and surface -->
+        <item name="android:colorBackground">@color/lavender_light</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/primary_purple_dark</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/lavender_dark</item>
+        <item name="android:windowBackground">@color/lavender_light</item>
+        <!-- Rounded corners -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.App.LargeComponent</item>
+    </style>
+
+    <style name="Theme.VirtualTourAR.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.VirtualTourAR.Splash" parent="Theme.VirtualTourAR">
+        <item name="android:windowBackground">@color/lavender_light</item>
+        <item name="android:statusBarColor">@color/lavender_light</item>
+        <item name="android:navigationBarColor">@color/lavender_light</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+
+    <style name="ShapeAppearance.App.LargeComponent" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+</resources>
