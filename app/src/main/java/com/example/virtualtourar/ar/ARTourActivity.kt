@@ -40,7 +40,7 @@ class ARTourActivity : AppCompatActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
         private const val MIN_DISTANCE_CHANGE = 10.0 // Only update if moved more than 10 meters
-        private const val MIN_TIME_BETWEEN_UPDATES = 5000L // 5 seconds between updates
+        private const val MIN_TIME_BETWEEN_UPDATES = 1000L // 1 second between updates (was 5000L)
         private const val BUFFER_ZONE = 20.0 // Points within 20 meters are considered equally close
     }
 
@@ -141,6 +141,8 @@ class ARTourActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        } else {
+            // Optionally, request permission or show rationale here
         }
     }
 
@@ -189,50 +191,50 @@ class ARTourActivity : AppCompatActivity() {
     }
 
     private fun updateDistance() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) 
-            != PackageManager.PERMISSION_GRANTED) {
-            android.util.Log.e("LocationDebug", "Location permission not granted")
-            return
-        }
-
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastUpdateTime < MIN_TIME_BETWEEN_UPDATES) {
-            return
-        }
-
-        // Validate coordinates
-        if (!isValidCoordinate(userLatitude, userLongitude)) {
-            android.util.Log.e("LocationDebug", "Invalid coordinates received: ($userLatitude, $userLongitude)")
-            return
-        }
-
         try {
-            android.util.Log.d("LocationDebug", """
-                Location Update:
-                - Current coordinates: ($userLatitude, $userLongitude)
-                - Time since last update: ${currentTime - lastUpdateTime}ms
-            """.trimIndent())
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                android.util.Log.e("LocationDebug", "Location permission not granted")
+                return
+            }
+            val currentTime = System.currentTimeMillis()
+            android.util.Log.d("LocationDebug", "updateDistance called at $currentTime, lastUpdateTime=$lastUpdateTime, diff=${currentTime - lastUpdateTime}")
+            if (currentTime - lastUpdateTime < MIN_TIME_BETWEEN_UPDATES) {
+                android.util.Log.d("LocationDebug", "Skipping update: not enough time elapsed")
+                return
+            }
+            lastUpdateTime = currentTime
+            android.util.Log.d("LocationDebug", "Proceeding with distance calculation. User location: ($userLatitude, $userLongitude)")
 
-            val closestPoint = getClosestTourPoint()
-            val distance = calculateDistance(closestPoint)
+            // Validate coordinates
+            if (!isValidCoordinate(userLatitude, userLongitude)) {
+                android.util.Log.e("LocationDebug", "Invalid coordinates received: ($userLatitude, $userLongitude)")
+                return
+            }
 
-            // Only update if the closest point has changed significantly
-            if (lastDisplayedPoint != closestPoint) {
-                val lastDistance = lastDisplayedPoint?.let { calculateDistance(it) } ?: Double.MAX_VALUE
-                if (Math.abs(distance - lastDistance) > MIN_DISTANCE_CHANGE) {
-                    if (distance <= 100) {
-                        showLocationDetected(closestPoint)
-                    } else {
-                        locationDetectedText.visibility = View.GONE
-                    }
-                    updateNearestLocationDisplay(closestPoint, distance)
-                    lastDisplayedPoint = closestPoint
-                    lastUpdateTime = currentTime
+            try {
+                android.util.Log.d("LocationDebug", """
+                    Location Update:
+                    - Current coordinates: ($userLatitude, $userLongitude)
+                    - Time since last update: ${currentTime - lastUpdateTime}ms
+                """.trimIndent())
+
+                val closestPoint = getClosestTourPoint()
+                val distance = calculateDistance(closestPoint)
+
+                // Always update the UI as the user moves
+                if (distance <= 20) {
+                    showLocationDetected(closestPoint)
+                } else {
+                    locationDetectedText.visibility = View.GONE
                 }
+                updateNearestLocationDisplay(closestPoint, distance)
+                lastDisplayedPoint = closestPoint
+            } catch (e: SecurityException) {
+                android.util.Log.e("LocationDebug", "SecurityException while updating location: ${e.message}")
+                Toast.makeText(this, "Location permission required", Toast.LENGTH_SHORT).show()
             }
         } catch (e: SecurityException) {
-            android.util.Log.e("LocationDebug", "SecurityException while updating location: ${e.message}")
-            Toast.makeText(this, "Location permission required", Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
         }
     }
 
@@ -324,10 +326,20 @@ class ARTourActivity : AppCompatActivity() {
     }
 
     private fun showLocationDetected(tourPoint: TourPoint) {
-        locationDetectedText.visibility = View.VISIBLE
-        locationDetectedText.text = "🎯 Location Detected! You are within 100 meters of ${tourPoint.name}"
-        locationDetectedText.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light))
-        Toast.makeText(this, "You are within 100 meters of ${tourPoint.name}!", Toast.LENGTH_SHORT).show()
+        try {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationDetectedText.visibility = View.VISIBLE
+                locationDetectedText.text = "🎯 Location Detected! You are within 20 meters of ${tourPoint.name}"
+                locationDetectedText.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_green_light))
+                Toast.makeText(this, "You are within 20 meters of ${tourPoint.name}!", Toast.LENGTH_SHORT).show()
+            } else {
+                // Optionally, request permission or show rationale here
+                locationDetectedText.visibility = View.GONE
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+            locationDetectedText.visibility = View.GONE
+        }
     }
 
     private fun updateLatLongDisplay() {
@@ -345,12 +357,18 @@ class ARTourActivity : AppCompatActivity() {
         nearestLocationText.text = "Nearest Location: ${tourPoint.name}, Distance: $roundedDistance meters"
         
         // Update text color based on distance
-        val textColor = if (distance <= 100) {
+        val textColor = if (distance <= 20) {
             android.R.color.holo_green_light
         } else {
             android.R.color.black
         }
         nearestLocationText.setTextColor(ContextCompat.getColor(this, textColor))
+        
+        if (distance <= 20) {
+            locationDetectedText.text = "Location Detected"
+        } else {
+            locationDetectedText.text = ""
+        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -394,5 +412,21 @@ class ARTourActivity : AppCompatActivity() {
         if (hasRequiredPermissions()) {
             startLocationUpdates()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        try {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }
